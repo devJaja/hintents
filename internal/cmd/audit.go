@@ -12,7 +12,9 @@ import (
 	"time"
 )
 
-// AuditLog represents the signed audit trail of a transaction simulation
+// AuditLog represents the signed audit trail of a transaction simulation.
+// The TraceHash is computed from the canonical JSON serialization of the Payload
+// to ensure deterministic verification across different platforms.
 type AuditLog struct {
 	Version         string    `json:"version"`
 	Timestamp       time.Time `json:"timestamp"`
@@ -23,7 +25,9 @@ type AuditLog struct {
 	Payload         Payload   `json:"payload"`
 }
 
-// Payload contains the actual trace data
+// Payload contains the actual trace data.
+// This struct is serialized using canonical JSON (sorted keys) to ensure
+// deterministic hashing across different platforms and Go versions.
 type Payload struct {
 	EnvelopeXdr   string   `json:"envelope_xdr"`
 	ResultMetaXdr string   `json:"result_meta_xdr"`
@@ -41,8 +45,9 @@ func Generate(txHash string, envelopeXdr, resultMetaXdr string, events, logs []s
 		Logs:          logs,
 	}
 
-	// 2. Serialize Payload to calculate hash
-	payloadBytes, err := json.Marshal(payload)
+	// 2. Serialize Payload to calculate hash using canonical JSON
+	// This ensures deterministic hashing across different OS targets
+	payloadBytes, err := marshalCanonical(payload)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal payload: %w", err)
 	}

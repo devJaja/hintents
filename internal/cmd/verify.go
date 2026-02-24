@@ -13,11 +13,10 @@ import (
 
 // Verify checks the integrity and signature of an AuditLog
 func Verify(log *AuditLog) error {
-	// 1. Re-calculate Trace Hash
+	// 1. Re-calculate Trace Hash using canonical JSON
 	// We must marshal the payload exactly as it was during generation.
-	// Since we use standard json.Marshal in both places on the same struct,
-	// it should be deterministic for this tool's usage.
-	payloadBytes, err := json.Marshal(log.Payload)
+	// Using canonical JSON ensures deterministic serialization across platforms.
+	payloadBytes, err := marshalCanonical(log.Payload)
 	if err != nil {
 		return fmt.Errorf("failed to marshal payload: %w", err)
 	}
