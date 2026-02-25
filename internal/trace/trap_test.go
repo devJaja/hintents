@@ -10,7 +10,6 @@ import (
 	"github.com/dotandev/hintents/internal/dwarf"
 )
 
-// TestIdentifyTrapType tests trap type identification
 func TestIdentifyTrapType(t *testing.T) {
 	td := &TrapDetector{}
 
