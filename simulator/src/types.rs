@@ -13,7 +13,7 @@ pub struct SimulationRequest {
     pub contract_wasm: Option<String>,
     pub enable_optimization_advisor: bool,
     pub profile: Option<bool>,
-    pub timestamp: Option<i64>,
+    pub _timestamp: Option<i64>,
     pub resource_calibration: Option<ResourceCalibration>,
 }
 
